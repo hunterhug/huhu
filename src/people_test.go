@@ -1,8 +1,3 @@
-/*
-   Created by jinhan on 17-10-20.
-   Tip:
-   Update:
-*/
 package src
 
 import (
@@ -10,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/go_tool/util"
 	"github.com/hunterhug/marmot/expert"
+	"github.com/hunterhug/parrot/util"
 )
 
 func TestCatchPeopleAnswer(t *testing.T) {

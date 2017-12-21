@@ -1,25 +1,14 @@
-/*
-Copyright 2017 by GoSpider author.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License
-*/
 package main
 
 import (
 	"flag"
 	"fmt"
-	"github.com/hunterhug/parrot/util"
-	zhihu "github.com/hunterhug/GoZhihu/src"
 	"os"
 	"strings"
 	"time"
+
+	zhihu "github.com/hunterhug/huhu/src"
+	"github.com/hunterhug/parrot/util"
 )
 
 var Limit = 520 //限制回答个数
@@ -37,7 +26,8 @@ func help() {
 	支持:
 	1. 从收藏夹https://www.zhihu.com/collection/78172986批量获取很多问题答案
 	2. 从问题https://www.zhihu.com/question/28853910批量获取一个问题很多答案
-	3. 从某个人https://www.zhihu.com/people/hunterhug批量获取粉丝/偶像和所有回答(待做)
+	3. 从某个人https://www.zhihu.com/people/hunterhug批量获取粉丝/偶像(待做, 已实现接口)
+	4. 从某个人https://www.zhihu.com/people/hunterhug批量所有回答(待做, 已实现接口)
 
 	请您按提示操作（Enter）！答案保存在data或者people文件夹下！
 
@@ -47,7 +37,7 @@ func help() {
 	陈白痴~~~
 
 	联系: Github:hunterhug
-	QQ: 459527502   Version: 2.0
+	QQ: 459527502   Version: 1
 	2017.6.29 写于大深圳
 	-----------------
 	`)

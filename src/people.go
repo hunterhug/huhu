@@ -1,8 +1,3 @@
-/*
-   Created by jinhan on 17-10-20.
-   Tip:
-   Update:
-*/
 package src
 
 import (
@@ -140,6 +135,7 @@ func ParsePeopleAnswer(data []byte) PeopleAnswerSS {
 	return r
 }
 
+// Todo
 // 获取一个人的所有回答, 由以上函数封装(内存占用由该用户回答数决定), 返回带有页数的map
 func CatchPeopleAllAnswer() map[int]PeopleAnswerSS {
 	return nil

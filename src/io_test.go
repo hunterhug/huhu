@@ -1,14 +1,10 @@
-/*
-   Created by jinhan on 17-9-4.
-   Tip:
-   Update:
-*/
 package src
 
 import (
 	"fmt"
-	"github.com/hunterhug/parrot/util"
 	"testing"
+
+	"github.com/hunterhug/parrot/util"
 )
 
 func TestOneOutputHtml(t *testing.T) {

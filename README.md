@@ -1,14 +1,14 @@
-# 项目：GoZhihu
+# 项目：huhu
 
-[![GitHub forks](https://img.shields.io/github/forks/hunterhug/GoZhihu.svg?style=social&label=Forks)](https://github.com/hunterhug/GoZhihu/network)
-[![GitHub stars](https://img.shields.io/github/stars/hunterhug/GoZhihu.svg?style=social&label=Stars)](https://github.com/hunterhug/GoZhihu/stargazers)
-[![GitHub last commit](https://img.shields.io/github/last-commit/hunterhug/GoZhihu.svg)](https://github.com/hunterhug/GoZhihu)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hunterhug/GoZhihu)](https://goreportcard.com/report/github.com/hunterhug/GoZhihu)
-[![GitHub issues](https://img.shields.io/github/issues/hunterhug/GoZhihu.svg)](https://github.com/hunterhug/GoZhihu/issues)
-[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/hunterhug/GoZhihu/master/LICENSE)
+[![GitHub forks](https://img.shields.io/github/forks/hunterhug/huhu.svg?style=social&label=Forks)](https://github.com/hunterhug/huhu/network)
+[![GitHub stars](https://img.shields.io/github/stars/hunterhug/huhu.svg?style=social&label=Stars)](https://github.com/hunterhug/huhu/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/hunterhug/huhu.svg)](https://github.com/hunterhug/huhu)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hunterhug/huhu)](https://goreportcard.com/report/github.com/hunterhug/huhu)
+[![GitHub issues](https://img.shields.io/github/issues/hunterhug/huhu.svg)](https://github.com/hunterhug/huhu/issues)
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/hunterhug/huhu/master/LICENSE)
 
 
-这是一个获取某乎回答的小工具, 可以获取单个问题, 单个收藏夹, 单个人下面的回答, 支持下载图片, 生成HTML离线查看, 工具下载请前往(请下载最新版本): [https://github.com/hunterhug/GoZhihu/releases](https://github.com/hunterhug/GoZhihu/releases)
+这是一个获取某乎回答的小工具, 可以获取单个问题, 单个收藏夹, 单个人下面的回答, 支持下载图片, 生成HTML离线查看, 工具下载请前往(请下载最新版本): [https://github.com/hunterhug/huhu/releases](https://github.com/hunterhug/huhu/releases)
 
 目前接口由Golang开发, 实现的API功能可以供外部程序员使用(持续修正)：
 
@@ -41,7 +41,7 @@ See [如何使用](doc/bai.md)
 此包在哥哥封装的爬虫包基础上开发：[Marmot | Golang Web Spider/Crawler/Scrapy Package](https://github.com/hunterhug/marmot)
 
 ```bash
-go get -u -v github.com/hunterhug/GoZhihu
+go get -u -v github.com/hunterhug/huhu
 ```
 
 如果失败请这样:
@@ -52,7 +52,7 @@ mkdir -p $GOPATH/src/github.com/hunterhug
 
 # 下载代码
 cd $GOPATH/src/github.com/hunterhug
-git clone https://github.com/hunterhug/GoZhihu
+git clone https://github.com/hunterhug/huhu
 ```
 
 开始运行main.go, 不同参数如下:
@@ -76,7 +76,7 @@ git clone https://github.com/hunterhug/GoZhihu
 二次开发时你只需`import`本包。
 
 ```go
-import zhihu "github.com/hunterhug/GoZhihu/src"
+import zhihu "github.com/hunterhug/huhu/src"
 ```
 
 API如下：
@@ -176,7 +176,7 @@ package main
 
 import (
 	"fmt"
-	zhihu "github.com/hunterhug/GoZhihu/src"
+	zhihu "github.com/hunterhug/huhu/src"
 	"strings"
 )
 
@@ -267,34 +267,8 @@ email:wefwefwefwef@qq.com
 
 ## 三.编译执行文件方式
 
-### Linux操作系统下跨平台交叉编译
-
-Linux二进制
-
-```bash
-cd main
-
-# 64位
-GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -x -o zhihu_linux_amd64 main.go
-
-# 32位
-GOOS=linux GOARCH=386 go build -ldflags "-s -w" -x -o zhihu_linux_386 main.go
 ```
-
-Windows二进制
-
-```bash
-# 64位
-GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -x -o zhihu_windows_amd64.exe main.go
-
-# 32位
-GOOS=windows GOARCH=386 go build -ldflags "-s -w" -x -o zhihu_windows_386.exe main.go
-```
-
-### Windows操作系统下编译
-
-```bash
-go build -o zhihu.exe main.go
+./build.sh v1
 ```
 
 如果你觉得项目帮助到你,欢迎请我喝杯咖啡
@@ -311,10 +285,10 @@ See [环境配置](doc/env.md)
 
 # LICENSE
 
-欢迎加功能(PR/issues),请遵循Apache License协议(即可随意使用但每个文件下都需加此申明）
+欢迎加功能(PR/issues),请遵循Apache License协议.
 
 ```
-Copyright 2017 by GoZhihu author.
+Copyright 2017 by huhu author.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

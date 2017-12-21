@@ -1,14 +1,10 @@
-/*
-   Created by jinhan on 17-10-20.
-   Tip:
-   Update:
-*/
 package src
 
 import (
-	"github.com/hunterhug/parrot/util"
 	"path/filepath"
 	"testing"
+
+	"github.com/hunterhug/parrot/util"
 )
 
 func TestSavePicture(t *testing.T) {

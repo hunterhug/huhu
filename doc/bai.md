@@ -1,35 +1,8 @@
-目录结构及获取的数据如下:
-
-```
-
---- zhihu_windows_amd64.exe
---- zhihu_linux_x86_64
---- cookie.txt
---- data  收藏夹和回答生成的数据在data文件夹
-     --- 27761934-如何让自拍的照片看上去像是别人拍的？.xx   *去重标志,如果要重新获取答案,请将`.xx`文件去掉
-     --- 27761934  * 回答文件集
-        ---zhi-zhi-zhi-41-89-167963702 * 一个用户的回答 包括图片
-           --- zhi-zhi-zhi-41-89-167963702的回答.html (里面的图片链接都替换成本地链接)
-           --- https###pic1.zhimg.com#v2-22407b227c9a7a19aa0057f38bf6e754_r.png  (已经不是这种样子了)
-               https###pic1.zhimg.com#v2-7782ff69838c379173415458b97b5008_xll.jpg
-               https###pic1.zhimg.com#v2-c41bf767819fbc61b3ff7bb4c2900884_r.jpg
-
-        ---zhi-zhi-wei-zhi-zhi-36-38-164986419
-        ---zhi-zhi-wei-zhi-zhi-hu-hu-wei-hu-hu-164880780
-
-     --- 27761934-html  生成的html集,可以点击查看(可选择防盗链, 请用非火狐浏览器查看)
-        --- 1.html
-        --- 2.html
-
---- people   获取用户粉丝数据和所有回答在此文件夹下
---- index.html 点这个就KO了.
-```
-
 ## 一.小白指南
 
 > 可以下载EXE文件
 
-Golang开发的爬虫，小白用户请下载[释出版本二进制](https://github.com/hunterhug/GoZhihu/releases)中的`zhihu_windows_amd64.exe`，并在同一目录下新建一个`cookie.txt`文件，
+Golang开发的爬虫，小白用户请下载[释出版本二进制](https://github.com/hunterhug/huhu/releases)中的`zhihu_windows_amd64.exe`，并在同一目录下新建一个`cookie.txt`文件，
 
 打开火狐浏览器后人工登录知乎，按F12，点击网络，刷新一下首页，然后点击第一个出现的`GET /`，找到消息头请求头，复制Cookie，然后粘贴到cookie.txt
 
@@ -89,3 +62,53 @@ y
 ![](2.png)
 
 可以看网站 [我的知乎](http://zhihu.lenggirl.com/)
+
+
+----
+
+
+收藏夹命令行支持, 可以后台跑!
+
+` ./zhihu_linux_amd64-1.1 --i=61633672 --l=50 --m=2 --x=1 `表示抓取收藏夹61633672下,每个问题抓50个回答, -x表示后台运行(1), -m表示模式(2表示收藏夹,以后会增加....)
+
+Flag way add!
+
+```
+Usage of :
+  -c string
+    	cookie file position (default "cookie.txt")
+  -i string
+    	id: must be num (default "x")
+  -l int
+    	limit (default 300)
+  -m string
+    	catch mode(1:question,2:collect,3) (default "2")
+  -x	flag mode
+
+```
+
+we want run in background!
+
+do this: now just support collect:
+
+```
+nohup ./zhihu_linux_amd64-1.1 --i=61633672 --l=50 --m=2 --x=1 &
+tail -f -n 10 nohup.out
+```
+
+总结:
+```
+# 一般交互模式:
+
+    -c指定cookie文件地址, 默认当前目录
+    go run main.go
+    go run main.go -c=/home/cookie.txt
+
+# 命令行模式:
+
+    -x  表示采用命令行
+    -m  表示模式(目前只支持2:收藏夹)
+    -l  表示问题回答限制个数(默认300)
+    -i  表示收藏夹ID
+    go run main.go -x=1 -m=2 -l=200 -i=78172986
+```

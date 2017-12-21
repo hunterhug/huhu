@@ -1,8 +1,3 @@
-/*
-   Created by jinhan on 17-10-20.
-   Tip:
-   Update:
-*/
 package src
 
 import (

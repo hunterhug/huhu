@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/hunterhug/GoZhihu",
+	"ImportPath": "github.com/hunterhug/huhu",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
 	"Deps": [
@@ -14,15 +14,17 @@
 		},
 		{
 			"ImportPath": "github.com/hunterhug/marmot/expert",
-			"Rev": "be10de64abcbaa7d701855604e233da4444f45f2"
+			"Comment": "v1-3-gc768d1b",
+			"Rev": "c768d1bf3373f1e57cbfc739c732ce4904ad756a"
 		},
 		{
 			"ImportPath": "github.com/hunterhug/marmot/miner",
-			"Rev": "be10de64abcbaa7d701855604e233da4444f45f2"
+			"Comment": "v1-3-gc768d1b",
+			"Rev": "c768d1bf3373f1e57cbfc739c732ce4904ad756a"
 		},
 		{
 			"ImportPath": "github.com/hunterhug/parrot/util",
-			"Rev": "2a0327ecdc18146947f7245d1e12979805056d01"
+			"Rev": "9a783982d9b40338c99e8472af5f3c7be330b982"
 		},
 		{
 			"ImportPath": "github.com/op/go-logging",
