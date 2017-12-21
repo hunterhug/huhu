@@ -2,7 +2,7 @@
 
 > 可以下载EXE文件
 
-Golang开发的爬虫，小白用户请下载[释出版本二进制](https://github.com/hunterhug/huhu/releases)中的`zhihu_windows_amd64.exe`，并在同一目录下新建一个`cookie.txt`文件，
+Golang开发的爬虫，小白用户请下载[释出版本二进制](http://hunterhug.github.io/other/app/huhu.zip)中的`zhihu_windows_amd64.exe`，并在同一目录下新建一个`cookie.txt`文件，
 
 打开火狐浏览器后人工登录知乎，按F12，点击网络，刷新一下首页，然后点击第一个出现的`GET /`，找到消息头请求头，复制Cookie，然后粘贴到cookie.txt
 
