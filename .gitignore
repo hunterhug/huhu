@@ -1,0 +1,8 @@
+.idea/*
+*.exe
+zhihu_linux_386*
+zhihu_linux_amd64*
+zhihu_ma*
+*.html
+data/*
+
