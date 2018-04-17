@@ -8,11 +8,12 @@ import (
 
 // catch粉丝
 func TestCatchUser(t *testing.T) {
-	e := SetCookie("/home/jinhan/cookie.txt")
+	e := SetCookie("../cookie1.txt")
 	if e != nil {
 		fmt.Println(e.Error())
+		return
 	}
-	a, e := CatchUser(true, "hunterhug", 20, 0)
+	a, e := CatchUser(false, "hunterhug", 20, 0)
 	if e != nil {
 		fmt.Println(e.Error())
 	} else {

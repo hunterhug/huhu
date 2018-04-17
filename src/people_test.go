@@ -28,7 +28,7 @@ func TestCatchPeopleAnswer(t *testing.T) {
 }
 
 func TestParsePeopleAnswer(t *testing.T) {
-	who := "hunterhug"
+	who := "excited-vczh"
 	page := 1
 	d, e := CatchPeopleAnswer(who, page)
 	if e != nil {

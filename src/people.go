@@ -25,7 +25,8 @@ func CatchPeopleAnswer(who string, page int) ([]byte, error) {
 
 // 单个用户回答
 type PeopleAnswerSS struct {
-	Entities OutEntities `json:"entities"`
+	Entities    OutEntities `json:"entities"`
+	CurrentUser string      `json:"currentUser"`
 }
 
 type OutEntities struct {
