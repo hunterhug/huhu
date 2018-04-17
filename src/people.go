@@ -23,14 +23,41 @@ func CatchPeopleAnswer(who string, page int) ([]byte, error) {
 	return b, e
 }
 
+// 单个用户回答
 type PeopleAnswerSS struct {
 	Entities OutEntities `json:"entities"`
 }
 
 type OutEntities struct {
-	Users   map[string]interface{} `json:"users"`
-	Answers map[string]OutAnswer   `json:"answers"`
+	Users   map[string]UserInfo  `json:"users"`
+	Answers map[string]OutAnswer `json:"answers"`
 	// todo
+}
+
+type UserInfo struct {
+	FollowingCount    int64               `json:"followingCount"`    // 关注了
+	FollowerCount     int64               `json:"followerCount"`     // 关注者
+	UrlToken          string              `json:"urlToken"`          // 唯一标识
+	Name              string              `json:"name"`              // 名字
+	AnswerCount       int64               `json:"answerCount"`       // 回答问题数
+	QuestionCount     int                 `json:"questionCount"`     // 提问数
+	Gender            int                 `json:"gender"`            // 性别
+	ThankedCount      int64               `json:"thankedCount"`      // 被感谢
+	FavoritedCount    int64               `json:"favoritedCount"`    // 被收藏
+	VoteupCount       int64               `json:"voteupCount"`       // 被赞成
+	Headline          string              `json:"headline"`          // 简介小
+	Description       string              `json:"description"`       // 简介大
+	AvatarUrlTemplate string              `json:"avatarUrlTemplate"` // 头像  xll
+	Business          UserInfoBusiness    `json:"business"`          // 行业
+	Locations         []UserInfoLocations `json:"locations"`         // 地址
+}
+
+type UserInfoBusiness struct {
+	Name string `json:"name"`
+}
+
+type UserInfoLocations struct {
+	Name string `json:"name"`
 }
 
 /*
@@ -110,14 +137,23 @@ type OutEntities struct {
       }
 */
 type OutAnswer struct {
-	Content      string                 `json:"content"`
-	CreatedTime  int                    `json:"createdTime"`
-	UpdateTime   int                    `json:"updatedTime"`
-	Author       map[string]interface{} `json:"author"`
-	Question     map[string]interface{} `json:"question"`
-	VoteupCount  int                    `json:"voteup_count"`  // 投票数: 赞同
-	CommentCount int                    `json:"comment_count"` // 评论数
-	Url          string                 `json:"url"`
+	Content     string `json:"content"` // 内容
+	CreatedTime int    `json:"createdTime"`
+	UpdateTime  int    `json:"updatedTime"`
+	//Author       map[string]interface{} `json:"author"`
+	Question     OutAnswerQuestionInfo `json:"question"`
+	VoteupCount  int                   `json:"voteup_count"`  // 投票数: 赞同
+	CommentCount int                   `json:"comment_count"` // 评论数
+	Url          string                `json:"url"`           // 网址
+}
+
+type OutAnswerQuestionInfo struct {
+	Created     int64  `json:"created"`
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	Id          int64  `json:"id"`
+	Typedudu    string `json:"type"`
+	UpdatedTime int64  `json:"updatedTime"`
 }
 
 // 解析获取的回答, 返回的是一个结构体

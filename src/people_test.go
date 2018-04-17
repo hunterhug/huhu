@@ -10,30 +10,31 @@ import (
 )
 
 func TestCatchPeopleAnswer(t *testing.T) {
-	who := "da-xiong-nu-da-xiong-nu"
+	who := "hunterhug"
 	page := 1
 	d, e := CatchPeopleAnswer(who, page)
 	if e != nil {
 		fmt.Println(e.Error())
 	} else {
-		util.SaveToFile(filepath.Join(util.CurDir(), "data/oquestion.html"), d)
+		util.SaveToFile(filepath.Join(util.CurDir(), "data/oquestion2.html"), d)
 
 		doc, _ := expert.QueryBytes(d)
 		text, ok := doc.Find("div#data").Attr("data-state")
 		if ok {
-			util.SaveToFile(filepath.Join(util.CurDir(), "data/oquestion.json"), []byte(text))
+			util.SaveToFile(filepath.Join(util.CurDir(), "data/oquestion2.json"), []byte(text))
 		}
 		fmt.Println(string(text))
 	}
 }
 
 func TestParsePeopleAnswer(t *testing.T) {
-	who := "liu-yuan-ming-89"
+	who := "hunterhug"
 	page := 1
 	d, e := CatchPeopleAnswer(who, page)
 	if e != nil {
 		fmt.Println(e.Error())
 	} else {
-		fmt.Printf("%#v\n", ParsePeopleAnswer(d))
+		uinfo := ParsePeopleAnswer(d)
+		fmt.Printf("%v\n%#v", uinfo.Entities.Users, uinfo.Entities.Answers)
 	}
 }

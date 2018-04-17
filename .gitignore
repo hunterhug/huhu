@@ -5,4 +5,5 @@ zhihu_linux_amd64*
 zhihu_ma*
 *.html
 data/*
+*.json
 

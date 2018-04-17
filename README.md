@@ -160,7 +160,7 @@ func CatchUser(fensi bool, token string, limit, offset int) ([]byte, error) {
 func ParseUser(data []byte) FollowData {
 ```
 
-6.单用户回答相关
+6.单用户回答相关(获取个人资料和回答)
 
 ```go
 // 获取一个人的一页回答, who为用户标志, 如:da-xiong-nu-da-xiong-nu page为页数
@@ -170,6 +170,7 @@ func CatchPeopleAnswer(who string, page int) ([]byte, error){
 func ParsePeopleAnswer(data []byte) PeopleAnswerSS {
 
 // 获取一个人的所有回答, 由以上函数封装(内存占用由该用户回答数决定), 返回带有页数的map
+//todo
 func CatchPeopleAllAnswer() map[int]PeopleAnswerSS {
 ```
 
