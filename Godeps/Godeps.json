@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/hunterhug/huhu",
 	"GoVersion": "go1.9",
-	"GodepVersion": "v79",
+	"GodepVersion": "v80",
 	"Deps": [
 		{
 			"ImportPath": "github.com/PuerkitoBio/goquery",
@@ -25,6 +25,11 @@
 		{
 			"ImportPath": "github.com/hunterhug/parrot/util",
 			"Rev": "9a783982d9b40338c99e8472af5f3c7be330b982"
+		},
+		{
+			"ImportPath": "github.com/lunny/html2md",
+			"Comment": "0",
+			"Rev": "13aaeeae9fb293668db3ef1e145064684735f3ce"
 		},
 		{
 			"ImportPath": "github.com/op/go-logging",
