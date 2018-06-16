@@ -156,9 +156,10 @@ func CatchPeopleAnswer(who string, page int) ([]byte, error) {
 		e = errors.New("not exist this page")
 	}
 
-	if strings.Contains(string(b), "EmptyState") {
+	if strings.Contains(string(b), "EmptyState-image") && strings.Contains(string(b), "还没有回答") {
 		e = errors.New("empty this page")
 	}
+
 	return b, e
 }
 
