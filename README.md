@@ -12,36 +12,54 @@
 
 目前接口由Golang开发, 实现的API功能可以供外部程序员使用(持续修正)：
 
-Version1支持:
 
 1. 通过单个问题id获取批量答案, 可保存图片和HTML回答
 2. 通过集合id获取批量问题后获取批量答案, 可保存图片和HTML回答
-
-Version2支持:
-
-1. 根据用户唯一域名id获取其关注的人，和关注她的人, 导出CSV(已经实现函数, 导出待做!)
-2. 获取一个人的所有回答(doing.... )
-3. 图片获取使用并发模式, 速度极快
-
-~~鸡肋(不要看):~~
-
-~~5. 关注别人（风险大容易被封杀,建议不要使用）~~
-
-~~6. 登录(本来可以登录，后来某乎加了倒置验证码),该验证码破解较容易~~
-
-~~7. 通过答案id获取单个回答（有点鸡肋，还是写了）~~
-
-# 用户收集器
-
-[子项目系列一：持久化可视化用户收集器](/web/README.md)
+3. 根据用户唯一域名id获取其关注的人，和关注她的人
+4. 获取一个人的所有回答
+5. 图片获取使用并发模式, 速度极快
+6. 关注别人（风险大容易被封杀,建议不要使用）~~
+7. 通过答案id获取单个回答（有点鸡肋，还是写了）~~
 
 ## 一.小白使用
 
-See [如何使用](doc/bai.md)
+See [如何使用](https://github.com/hunterhug/huhu/releases/tag/v1)
+
+开始运行main.go, 不同参数如下:
+
+```
+# 一般交互模式(问答式):
+
+    -c指定cookie文件地址, 默认当前目录
+    go run main.go
+    go run main.go -c=/home/cookie.txt
+
+    问答如下:
+    	因为知乎防盗链，把生成的HTML放在你的网站上是看不见图片的！
+	选项:
+	1. N: 不防盗链(默认), 只能本地浏览器查看远程zhihu图片
+	2. Y: JS解决防盗链, 引入JS方便查看远程zhihu图片
+	3. X: HTML替换本地图片, 图片会保存, 可以永久观看
+	4. Z: 打印抓取的问题html
+
+    N: 不防盗链会保持原有知乎的图片链接, 在本地打开是直接从知乎下载, 但是如果发布到自己网站则看不见.
+    Y: JS防盗链使用javascript内嵌引用图片, 图片地址与第一种方式相同, 不过发布到自己网站可以看得见
+    X: HTML替换本地图片则是会保存所有图片到本地.
+    Z: 打印问题集合列表, 生成index.html
+
+# 命令行模式(直接运行方式):
+
+    -x  表示采用命令行(必须为1)
+    -m  表示模式(目前只支持2:收藏夹)
+    -l  表示问题回答限制个数(默认300)
+    -i  表示问题收藏夹ID
+    go run main.go -x=1 -m=2 -l=200 -i=78172986
+```
+
 
 ## 二.API说明
 
-此包在哥哥封装的爬虫包基础上开发：[Marmot | Golang Web Spider/Crawler/Scrapy Package](https://github.com/hunterhug/marmot)
+下载：
 
 ```bash
 go get -u -v github.com/hunterhug/huhu
@@ -56,37 +74,6 @@ mkdir -p $GOPATH/src/github.com/hunterhug
 # 下载代码
 cd $GOPATH/src/github.com/hunterhug
 git clone https://github.com/hunterhug/huhu
-```
-
-开始运行main.go, 不同参数如下:
-
-```
-# 一般交互模式(问答式):
-
-    -c指定cookie文件地址, 默认当前目录
-    go run main.go
-    go run main.go -c=/home/cookie.txt
-    
-    问答如下:
-    	因为知乎防盗链，把生成的HTML放在你的网站上是看不见图片的！
-	选项:
-	1. N: 不防盗链(默认), 只能本地浏览器查看远程zhihu图片
-	2. Y: JS解决防盗链, 引入JS方便查看远程zhihu图片
-	3. X: HTML替换本地图片, 图片会保存, 可以永久观看
-	4. Z: 打印抓取的问题html
-	
-    N: 不防盗链会保持原有知乎的图片链接, 在本地打开是直接从知乎下载, 但是如果发布到自己网站则看不见. 
-    Y: JS防盗链使用javascript内嵌引用图片, 图片地址与第一种方式相同, 不过发布到自己网站可以看得见
-    X: HTML替换本地图片则是会保存所有图片到本地.
-    Z: 打印问题集合列表, 生成index.html
-
-# 命令行模式(直接运行方式):
-
-    -x  表示采用命令行(必须为1)
-    -m  表示模式(目前只支持2:收藏夹)
-    -l  表示问题回答限制个数(默认300)
-    -i  表示问题收藏夹ID
-    go run main.go -x=1 -m=2 -l=200 -i=78172986
 ```
 
 二次开发时你只需`import`本包。
@@ -172,8 +159,11 @@ func CatchPeopleAnswer(who string, page int) ([]byte, error){
 // 解析获取的回答, 返回的是一个结构体
 func ParsePeopleAnswer(data []byte) PeopleAnswerSS {
 
-// 获取一个人的所有回答, 由以上函数封装(内存占用由该用户回答数决定), 返回带有页数的map
-//todo
+// 将上面解析回答的内容进行简化，或者转成markdown
+func ReplacePeopleOneAnswerOuput(s string, markdown bool) string
+
+// 获取一个人的所有回答, 由以上函数封装(内存占用由该用户回答数决定),未作
+// 返回带有页数的map(最好自己调用CatchPeopleAnswer)
 func CatchPeopleAllAnswer() map[int]PeopleAnswerSS {
 ```
 

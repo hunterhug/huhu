@@ -23,26 +23,7 @@ type FollowData struct {
 	Data []FollowerDataInfo `json:"data"`
 }
 
-/*
-"is_followed": false,
-"avatar_url_template": "https://pic3.zhimg.com/f9c55d14d855e0bf44511bd9c0f73aae_{size}.jpg",
-"user_type": "people",
-"answer_count": 13,
-"is_following": false,
-"headline": "环境工程专业学生",
-"url_token": "li-bin-63-8-70",
-"id": "98a410425c393a2a64c35bdca8ad8f27",
-"articles_count": 0,
-"type": "people",
-"name": "李斌",
-"url": "http://www.zhihu.com/api/v4/people/98a410425c393a2a64c35bdca8ad8f27",
-"gender": -1,
-"is_advertiser": false,
-"avatar_url": "https://pic3.zhimg.com/f9c55d14d855e0bf44511bd9c0f73aae_is.jpg",
-"is_org": false,
-"follower_count": 12,
-"badge": []
-*/
+
 type FollowerDataInfo struct {
 	IsFollowed        bool   `json:"is_followed"`
 	AvatarUrlTemplate string `json:"avatar_url_template"`

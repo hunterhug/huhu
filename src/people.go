@@ -2,26 +2,16 @@ package src
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"strings"
-
 	"github.com/hunterhug/marmot/expert"
+	"strings"
+	"errors"
+	"regexp"
+	"github.com/lunny/html2md"
 )
 
 // https://www.zhihu.com/people/da-xiong-nu-da-xiong-nu/answers
 var PeopleAnswer = "https://www.zhihu.com/people/%s/answers?page=%d"
-
-// 获取一个人的一页回答, who为用户标志, 如:da-xiong-nu-da-xiong-nu page为页数
-func CatchPeopleAnswer(who string, page int) ([]byte, error) {
-	url := fmt.Sprintf(PeopleAnswer, who, page)
-	Baba.SetUrl(url)
-	b, e := Baba.Get()
-	if strings.Contains(string(b), "你似乎来到了没有知识存在的荒原") {
-		e = errors.New("not exist this page")
-	}
-	return b, e
-}
 
 // 单个用户回答
 type PeopleAnswerSS struct {
@@ -157,6 +147,21 @@ type OutAnswerQuestionInfo struct {
 	UpdatedTime int64  `json:"updatedTime"`
 }
 
+// 获取一个人的一页回答, who为用户标志, 如:da-xiong-nu-da-xiong-nu page为页数
+func CatchPeopleAnswer(who string, page int) ([]byte, error) {
+	url := fmt.Sprintf(PeopleAnswer, who, page)
+	Baba.SetUrl(url)
+	b, e := Baba.Get()
+	if strings.Contains(string(b), "你似乎来到了没有知识存在的荒原") {
+		e = errors.New("not exist this page")
+	}
+
+	if strings.Contains(string(b), "EmptyState") {
+		e = errors.New("empty this page")
+	}
+	return b, e
+}
+
 // 解析获取的回答, 返回的是一个结构体
 func ParsePeopleAnswer(data []byte) PeopleAnswerSS {
 	r := PeopleAnswerSS{}
@@ -174,6 +179,29 @@ func ParsePeopleAnswer(data []byte) PeopleAnswerSS {
 
 // Todo
 // 获取一个人的所有回答, 由以上函数封装(内存占用由该用户回答数决定), 返回带有页数的map
-func CatchPeopleAllAnswer() map[int]PeopleAnswerSS {
+func CatchPeopleAllAnswer(who string) map[int]PeopleAnswerSS {
+	//page := 1
+	//d, e := CatchPeopleAnswer(who, page)
+	//if e != nil {
+	//	fmt.Println(e.Error())
+	//	return
+	//} else {
+	//	uinfo := ParsePeopleAnswer(d)
+	//}
 	return nil
+}
+
+func ReplacePeopleOneAnswerOuput(s string, markdown bool) string {
+	r1, _ := regexp.Compile("<noscript>.*?</noscript>")
+	s = r1.ReplaceAllString(s, "")
+	r, _ := regexp.Compile(`src="(.*?)"`)
+	s = r.ReplaceAllString(s, "")
+
+	s = strings.Replace(s, "data-actualsrc", "src", -1)
+	s = strings.Replace(s, "data-original", "src", -1)
+
+	if markdown {
+		s = html2md.Convert(s)
+	}
+	return s
 }

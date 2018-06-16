@@ -9,7 +9,6 @@ import (
 	"github.com/hunterhug/parrot/util"
 ) // 第一步：引入库
 
-//"fmt"
 
 var (
 	// 各种链接
@@ -26,6 +25,7 @@ var (
 
 	// 知乎防盗链，要加一个js
 	PublishToWeb = false
+
 	// 抓取图片？
 	CatchP = false
 	Debug  = "info"

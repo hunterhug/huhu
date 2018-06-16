@@ -28,13 +28,19 @@ func TestCatchPeopleAnswer(t *testing.T) {
 }
 
 func TestParsePeopleAnswer(t *testing.T) {
-	who := "excited-vczh"
+	who := "da-xiong-nu-da-xiong-nu"
 	page := 1
 	d, e := CatchPeopleAnswer(who, page)
 	if e != nil {
 		fmt.Println(e.Error())
+		return
 	} else {
 		uinfo := ParsePeopleAnswer(d)
-		fmt.Printf("%v\n%#v", uinfo.Entities.Users, uinfo.Entities.Answers)
+		for i, v := range uinfo.Entities.Users {
+			fmt.Printf("%v,%#v\n", i, v)
+		}
+		for i, v := range uinfo.Entities.Answers {
+			fmt.Printf("%v,%#v\n", i, ReplacePeopleOneAnswerOuput(v.Content,true))
+		}
 	}
 }
