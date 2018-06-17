@@ -133,9 +133,9 @@ type OutAnswer struct {
 	UpdateTime  int    `json:"updatedTime"`
 	//Author       map[string]interface{} `json:"author"`
 	Question     OutAnswerQuestionInfo `json:"question"`
-	VoteupCount  int                   `json:"voteup_count"`  // 投票数: 赞同
-	CommentCount int                   `json:"comment_count"` // 评论数
-	Url          string                `json:"url"`           // 网址
+	VoteupCount  int                   `json:"voteupCount"`  // 投票数: 赞同
+	CommentCount int                   `json:"commentCount"` // 评论数
+	Url          string                `json:"url"`          // 网址
 }
 
 type OutAnswerQuestionInfo struct {
