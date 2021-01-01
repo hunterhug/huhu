@@ -8,7 +8,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/hunterhug/huhu/master/LICENSE)
 
 
-这是一个获取某乎回答的小工具, 可以获取单个问题, 单个收藏夹, 单个人下面的回答, 支持下载图片, 生成HTML离线查看, 工具下载请前往[释出版本二进制](https://github.com/hunterhug/huhu/releases)
+这是一个获取某乎回答的小工具, 可以获取单个问题, 单个收藏夹, 单个人下面的回答, 支持下载图片, 生成HTML离线查看, 工具下载请前往[释出版本二进制](https://github.com/hunterhug/huhu/releases)。
 
 目前接口由Golang开发, 实现的API功能可以供外部程序员使用(持续修正)：
 
