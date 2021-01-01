@@ -1,3 +1,9 @@
+/*
+	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	Attribution-NonCommercial-NoDerivatives 4.0 International
+	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
+	You can use it for education only but can't make profits for any companies and individuals!
+*/
 package miner
 
 import (
@@ -8,21 +14,22 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/hunterhug/parrot/util"
+	"github.com/hunterhug/marmot/util"
+	"mime/multipart"
 )
 
 // New a worker, if ipstring is a proxy address, New a proxy client.
 // Proxy address such as:
 // 		http://[user]:[password@]ip:port, [] stand it can choose or not. case: socks5://127.0.0.1:1080
-func NewWorker(ipstring interface{}) (*Worker, error) {
+func NewWorker(ipString interface{}) (*Worker, error) {
 	worker := new(Worker)
 	worker.Header = http.Header{}
 	worker.Data = url.Values{}
 	worker.BData = []byte{}
-	if ipstring != nil {
-		client, err := NewProxyClient(strings.ToLower(ipstring.(string)))
+	if ipString != nil {
+		client, err := NewProxyClient(strings.ToLower(ipString.(string)))
 		worker.Client = client
-		worker.Ipstring = ipstring.(string)
+		worker.Ipstring = ipString.(string)
 		return worker, err
 	} else {
 		client, err := NewClient()
@@ -34,8 +41,8 @@ func NewWorker(ipstring interface{}) (*Worker, error) {
 }
 
 // Alias Name for NewWorker
-func New(ipstring interface{}) (*Worker, error) {
-	return NewWorker(ipstring)
+func New(ipString interface{}) (*Worker, error) {
+	return NewWorker(ipString)
 }
 
 // New Worker by Your Client
@@ -44,6 +51,11 @@ func NewWorkerByClient(client *http.Client) *Worker {
 	worker.Header = http.Header{}
 	worker.Data = url.Values{}
 	worker.BData = []byte{}
+
+	// API must can set timeout
+	if DefaultTimeOut != 0 {
+		client.Timeout = util.Second(DefaultTimeOut)
+	}
 	worker.Client = client
 	return worker
 }
@@ -75,7 +87,7 @@ func (worker *Worker) Go() (body []byte, e error) {
 	case DELETE:
 		return worker.Delete()
 	case OTHER:
-		return []byte(""), errors.New("please use method OtherGo(method, content type)")
+		return []byte(""), errors.New("please use method OtherGo(method, contentType string) or OtherGoBinary(method, contentType string)")
 	default:
 		return worker.Get()
 	}
@@ -108,7 +120,7 @@ func (worker *Worker) JsonToString() (string, error) {
 }
 
 // Main method I make!
-func (worker *Worker) sent(method, contenttype string, binary bool) (body []byte, e error) {
+func (worker *Worker) sent(method, contentType string, binary bool) (body []byte, e error) {
 	// Lock it for save
 	worker.mux.Lock()
 	defer worker.mux.Unlock()
@@ -127,26 +139,40 @@ func (worker *Worker) sent(method, contenttype string, binary bool) (body []byte
 	Logger.Debugf("[GoWorker] %s %s", method, worker.Url)
 
 	// New a Request
-	var request = &http.Request{}
-
-	// If binary parm value is true and BData is not empty
+	var request *http.Request
+	var err error
+	// If binary value is true and BData is not empty
 	// suit for POSTJSON(), POSTFILE()
 	if len(worker.BData) != 0 && binary {
-		pr := ioutil.NopCloser(bytes.NewReader(worker.BData))
-		request, _ = http.NewRequest(method, worker.Url, pr)
+		pr := bytes.NewReader(worker.BData)
+		request, err = http.NewRequest(method, worker.Url, pr)
 	} else if len(worker.Data) != 0 { // such POST() from table form
-		pr := ioutil.NopCloser(strings.NewReader(worker.Data.Encode()))
-		request, _ = http.NewRequest(method, worker.Url, pr)
+		pr := strings.NewReader(worker.Data.Encode())
+		request, err = http.NewRequest(method, worker.Url, pr)
 	} else {
-		request, _ = http.NewRequest(method, worker.Url, nil)
+		request, err = http.NewRequest(method, worker.Url, nil)
 	}
+
+	if err != nil {
+		// I count Error time
+		worker.Errortimes++
+		return nil, err
+	}
+
+	// Close avoid EOF
+	// For client requests, setting this field prevents re-use of
+	// TCP connections between requests to the same hosts, as if
+	// Transport.DisableKeepAlives were set.
+	// maybe you want long connection
+	// todo
+	//request.Close = true
 
 	// Clone Header, I add some HTTP header!
 	request.Header = CloneHeader(worker.Header)
 
-	// In fact contenttype must not empty
-	if contenttype != "" {
-		request.Header.Set("Content-Type", contenttype)
+	// In fact content type must not empty
+	if contentType != "" {
+		request.Header.Set("Content-Type", contentType)
 	}
 	worker.Request = request
 
@@ -168,6 +194,7 @@ func (worker *Worker) sent(method, contenttype string, binary bool) (body []byte
 
 	// Close it attention response may be nil
 	if response != nil {
+		//response.Close = true
 		defer response.Body.Close()
 	}
 
@@ -222,8 +249,41 @@ func (worker *Worker) PostXML() (body []byte, e error) {
 }
 
 func (worker *Worker) PostFILE() (body []byte, e error) {
-	return worker.sent(POST, HTTPFILEContentType, true)
+	return worker.sentFile(POST)
 
+}
+
+func (worker *Worker) sentFile(method string) ([]byte, error) {
+	if worker.FileName == "" || worker.FileFormName == "" {
+		return nil, errors.New("fileName or fileFormName must not empty")
+	}
+	if len(worker.BData) == 0 {
+		return nil, errors.New("BData must not empty")
+	}
+
+	bodyBuf := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(bodyBuf)
+
+	fileWriter, err := bodyWriter.CreateFormFile(worker.FileFormName, worker.FileName)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = fileWriter.Write(worker.BData)
+	if err != nil {
+		return nil, err
+	}
+
+	contentType := bodyWriter.FormDataContentType()
+
+	err = bodyWriter.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	worker.SetBData(bodyBuf.Bytes())
+
+	return worker.sent(method, contentType, true)
 }
 
 // Put
@@ -240,7 +300,7 @@ func (worker *Worker) PutXML() (body []byte, e error) {
 }
 
 func (worker *Worker) PutFILE() (body []byte, e error) {
-	return worker.sent(PUT, HTTPFILEContentType, true)
+	return worker.sentFile(PUT)
 
 }
 
@@ -267,6 +327,10 @@ Content Type
 	"text/xml"
 	"multipart/form-data"
 */
-func (worker *Worker) OtherGo(method, contenttype string) (body []byte, e error) {
-	return worker.sent(method, contenttype, true)
+func (worker *Worker) OtherGo(method, contentType string) (body []byte, e error) {
+	return worker.sent(method, contentType, false)
+}
+
+func (worker *Worker) OtherGoBinary(method, contentType string) (body []byte, e error) {
+	return worker.sent(method, contentType, true)
 }

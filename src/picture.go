@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/hunterhug/marmot/expert"
 	"github.com/hunterhug/marmot/miner"
+	"github.com/hunterhug/marmot/util/goquery"
 	"github.com/hunterhug/parrot/util"
 )
 

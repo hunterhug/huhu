@@ -1,11 +1,17 @@
-// Pacakge expert is use to parse content
+/*
+	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	Attribution-NonCommercial-NoDerivatives 4.0 International
+	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
+	You can use it for education only but can't make profits for any companies and individuals!
+*/
 package expert
 
+// Package expert is use to parse content
 import (
 	"regexp"
 	"strings"
 
-	"github.com/PuerkitoBio/goquery" // please include by yourself
+	"github.com/hunterhug/marmot/util/goquery"
 )
 
 func QueryBytes(content []byte) (*goquery.Document, error) {
@@ -20,11 +26,11 @@ func QueryString(content string) (*goquery.Document, error) {
 
 // Find All picture. Must prefix with http(s)
 func FindPicture(s string) []string {
-	returnlist := []string{}
+	picList := make([]string, 0)
 	re, _ := regexp.Compile(`src\s*=\s*["'](http[s]?:\/\/.*?\.(jpg|jpeg|png|gif))["']`)
 	output := re.FindAllStringSubmatch(s, -1)
 	for _, o := range output {
-		returnlist = append(returnlist, o[1])
+		picList = append(picList, o[1])
 	}
-	return returnlist
+	return picList
 }

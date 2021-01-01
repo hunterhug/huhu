@@ -7,4 +7,5 @@ zhihu_ma*
 data/*
 *.json
 cookie1.txt
-
+.DS_Store
+binary_zhihu/

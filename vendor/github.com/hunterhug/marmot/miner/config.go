@@ -1,3 +1,9 @@
+/*
+	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	Attribution-NonCommercial-NoDerivatives 4.0 International
+	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
+	You can use it for education only but can't make profits for any companies and individuals!
+*/
 package miner
 
 import (
@@ -7,29 +13,31 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hunterhug/parrot/util"
+	"github.com/hunterhug/marmot/util"
 )
 
 // Worker is the main object to sent http request and return result of response
 type Worker struct {
 	// In order fast chain func call I put the basic config below
-	Url      string         // Which url we want
-	Method   string         // Get/Post method
-	Header   http.Header    // Http header
-	Data     url.Values     // Sent by form data
-	BData    []byte         // Sent by binary data
-	Wait     int            // Wait Time
-	Client   *http.Client   // Our Client
-	Request  *http.Request  // Debug
-	Response *http.Response // Debug
-	Raw      []byte         // Raw data we get
+	Url          string         // Which url we want
+	Method       string         // Get/Post method
+	Header       http.Header    // Http header
+	Data         url.Values     // Sent by form data
+	FileName     string         // FileName which sent to remote
+	FileFormName string         // File Form Name which sent to remote
+	BData        []byte         // Sent by binary data, can together with File
+	Wait         int            // Wait Time
+	Client       *http.Client   // Our Client
+	Request      *http.Request  // Debug
+	Response     *http.Response // Debug
+	Raw          []byte         // Raw data we get
 
-	// The name below is not so good but has already been used in many project, so bear it.
+	// can ignore ! The name below is not so good but has already been used in many project, so bear it.
 	Preurl        string // Pre url
-	UrlStatuscode int    // the last url response code, such as 404
+	UrlStatuscode int    // The last url response code, such as 404
 	Fetchtimes    int    // Url fetch number times
 	Errortimes    int    // Url fetch error times
-	Ipstring      string // worker proxy ip, just for user to record their proxy ip, default: localhost
+	Ipstring      string // Worker proxy ip, just for user to record their proxy ip, default: localhost
 
 	// AOP like Java
 	Ctx          context.Context
@@ -122,6 +130,16 @@ func (worker *Worker) SetUrl(url string) *Worker {
 
 func SetUrl(url string) *Worker {
 	return DefaultWorker.SetUrl(url)
+}
+
+func (worker *Worker) SetFileInfo(fileName, fileFormName string) *Worker {
+	worker.FileName = fileName
+	worker.FileFormName = fileFormName
+	return worker
+}
+
+func SetFileInfo(fileName, fileFormName string) *Worker {
+	return DefaultWorker.SetFileInfo(fileName, fileFormName)
 }
 
 func (worker *Worker) SetMethod(method string) *Worker {

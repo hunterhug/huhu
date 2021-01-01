@@ -34,11 +34,10 @@ func help() {
 	如果什么都没抓到请往exe同级目录cookie.txt,增加cookie，手动增加cookie见说明
 
 	你亲爱的萌萌~ 努力工作中...
-	陈白痴~~~
 
 	联系: Github:hunterhug
-	QQ: 459527502   Version: 1
-	2017.6.29 写于大深圳
+	2017.6.29 写于大深圳  Version1.x
+    2021.1.1 修改 Version2.0
 	-----------------
 	`)
 }
@@ -81,13 +80,18 @@ func main() {
 	因为知乎防盗链，把生成的HTML放在你的网站上是看不见图片的！
 
 	选项:
-	1. N: 不防盗链(默认), 只能本地浏览器查看远程zhihu图片
-	2. Y: JS解决防盗链, 引入JS方便查看远程zhihu图片
-	3. X: HTML替换本地图片, 图片会保存, 可以永久观看
-	4. Z: 打印抓取的问题html
+	1. Y: JS解决防盗链, 引入JS方便查看远程图片
+	2. X(默认): HTML替换本地图片, 图片会保存, 可以永久观看
+	3. Z: 打印抓取的问题html
 
-	请选择:`, "n"))
+	请选择:`, "x"))
 
+	if strings.Contains(js, "y") ||
+		strings.Contains(js, "x") ||
+		strings.Contains(js, "z") {
+	} else {
+		js = "x"
+	}
 	if strings.Contains(js, "z") {
 		zhihu.Tool()
 		return
@@ -141,7 +145,7 @@ func Base() {
 	for {
 		page := 1
 		//28467579
-		id := zhihu.Input("萌萌：请输入问题ID:", "")
+		id := zhihu.Input("萌萌：请输入问题ID(默认28467579):", "28467579")
 		q := zhihu.Question(id)
 		//fmt.Println(q)
 

@@ -1,3 +1,9 @@
+/*
+	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	Attribution-NonCommercial-NoDerivatives 4.0 International
+	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
+	You can use it for education only but can't make profits for any companies and individuals!
+*/
 package miner
 
 import (
@@ -6,17 +12,17 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hunterhug/parrot/util"
+	"github.com/hunterhug/marmot/util"
 )
 
-// Wait some secord
-func Wait(waittime int) {
-	if waittime <= 0 {
+// Wait some second
+func Wait(waitTime int) {
+	if waitTime <= 0 {
 		return
 	} else {
 		// debug
-		Logger.Debugf("Wait %d Second.", waittime)
-		util.Sleep(waittime)
+		Logger.Debugf("Wait %d Second.", waitTime)
+		util.Sleep(waitTime)
 	}
 }
 
@@ -48,5 +54,5 @@ func OutputMaps(info string, args map[string][]string) {
 	for k, v := range args {
 		s = s + fmt.Sprintf("%-25s| %-6s\n", k, strings.Join(v, "||"))
 	}
-	Logger.Debugf("[GoWorker] %s", s)
+	Logger.Debugf("[GoWorker] %s-%s", info, s)
 }

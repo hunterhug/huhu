@@ -1,0 +1,17 @@
+# github.com/hunterhug/marmot v1.0.4
+## explicit
+github.com/hunterhug/marmot/expert
+github.com/hunterhug/marmot/miner
+github.com/hunterhug/marmot/proxy
+github.com/hunterhug/marmot/util
+github.com/hunterhug/marmot/util/cascadia
+github.com/hunterhug/marmot/util/go-logging
+github.com/hunterhug/marmot/util/goquery
+github.com/hunterhug/marmot/util/html
+github.com/hunterhug/marmot/util/html/atom
+# github.com/hunterhug/parrot v0.0.0-20181221092606-6af97adffe79
+## explicit
+github.com/hunterhug/parrot/util
+# github.com/lunny/html2md v0.0.0-20181018071239-7d234de44546
+## explicit
+github.com/lunny/html2md

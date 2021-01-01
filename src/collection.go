@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/hunterhug/marmot/expert"
+	"github.com/hunterhug/marmot/util/goquery"
 )
 
 // 抓取收藏夹第几页列表
