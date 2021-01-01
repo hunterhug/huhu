@@ -48,6 +48,9 @@ func main() {
 		//fmt.Printf("%#v\n", answers.Data)
 	}
 
+	for _, a := range answers.Data {
+		fmt.Printf("a:%#v\n", a)
+	}
 	// 7. 选择OutputHtml不要防盗链，因为回答输出的html经过了处理，所以我们进行过滤出好东西
 	zhihu.SetPublishToWeb(false)
 	qid, aid, t, who, html := zhihu.OutputHtml(answers.Data[0])
