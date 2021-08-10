@@ -1,5 +1,5 @@
 /*
-	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	All right reserved https://github.com/hunterhug/marmot at 2016-2021
 	Attribution-NonCommercial-NoDerivatives 4.0 International
 	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
 	You can use it for education only but can't make profits for any companies and individuals!
@@ -12,13 +12,11 @@ import (
 	"strings"
 )
 
-// string to int
 func SI(s string) (i int, e error) {
 	i, e = strconv.Atoi(s)
 	return
 }
 
-// int to string
 func IS(i int) string {
 	return strconv.Itoa(i)
 }
@@ -27,7 +25,6 @@ func ToLower(s string) string {
 	return strings.ToLower(s)
 }
 
-// change by python
 func DivideStringList(files []string, num int) (map[int][]string, error) {
 	length := len(files)
 	split := map[int][]string{}
@@ -41,7 +38,7 @@ func DivideStringList(files []string, num int) (map[int][]string, error) {
 	process := length / num
 	for i := 0; i < num; i++ {
 		// slice inside has a refer, so must do this append
-		//split[i]=files[i*process : (i+1)*process] wrong!
+		// split[i]=files[i*process : (i+1)*process] wrong!
 		split[i] = append(split[i], files[i*process:(i+1)*process]...)
 	}
 	remain := files[num*process:]
@@ -51,7 +48,6 @@ func DivideStringList(files []string, num int) (map[int][]string, error) {
 	return split, nil
 }
 
-//字符串是否在字符串数组中
 func InArray(sa []string, a string) bool {
 	for _, v := range sa {
 		if a == v {

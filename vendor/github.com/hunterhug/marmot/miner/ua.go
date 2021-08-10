@@ -1,5 +1,5 @@
 /*
-	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	All right reserved https://github.com/hunterhug/marmot at 2016-2021
 	Attribution-NonCommercial-NoDerivatives 4.0 International
 	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
 	You can use it for education only but can't make profits for any companies and individuals!
@@ -12,10 +12,10 @@ import (
 	"strings"
 )
 
-// Global User-Agent provide
+// Ua Global User-Agent provide
 var Ua = map[int]string{}
 
-// User-Agent init
+// UaInit User-Agent init
 func UaInit() {
 	Ua = map[int]string{
 		0:   "Mozilla/5.0 (SymbianOS/9.1; U; [en]; SymbianOS/91 Series60/3.0) AppleWebkit/413 (KHTML, like Gecko) Safari/413",
@@ -466,19 +466,18 @@ func UaInit() {
 	}
 
 	// this *.txt maybe not found if you exec binary, so we just fill several ua
-	temp, err := util.ReadfromFile(util.CurDir() + "/config/ua.txt")
+	temp, err := util.ReadFromFile(util.CurDir() + "/config/ua.txt")
 
 	if err == nil {
 		uas := strings.Split(string(temp), "\n")
 		for i, ua := range uas {
-			//fmt.Printf("%d:\"%s\",\n", i, ua)
 			Ua[i] = strings.TrimSpace(strings.Replace(ua, "\r", "", -1))
 		}
 	}
 
 }
 
-// back random User-Agent
+// RandomUa back random User-Agent
 func RandomUa() string {
 	length := len(Ua)
 	if length == 0 {

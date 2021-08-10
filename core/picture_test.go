@@ -1,0 +1,18 @@
+package core
+
+import (
+	"path/filepath"
+	"testing"
+
+	"github.com/hunterhug/huhu/util"
+)
+
+func TestSavePicture(t *testing.T) {
+	body, err := util.ReadFromFile(filepath.Join(util.CurDir(), "data/question.html"))
+	dir := filepath.Join(util.CurDir(), "data/00/00")
+	if err != nil {
+		panic(err.Error())
+	}
+	SetSavePicture(true, 50)
+	SavePicture(dir, body)
+}

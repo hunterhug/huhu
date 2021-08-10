@@ -9,3 +9,4 @@ data/*
 cookie1.txt
 .DS_Store
 binary_zhihu/
+bin/

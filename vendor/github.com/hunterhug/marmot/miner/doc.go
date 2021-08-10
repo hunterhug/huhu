@@ -1,5 +1,5 @@
 /*
-	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	All right reserved https://github.com/hunterhug/marmot at 2016-2021
 	Attribution-NonCommercial-NoDerivatives 4.0 International
 	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
 	You can use it for education only but can't make profits for any companies and individuals!
@@ -13,20 +13,24 @@ Example:
 	package main
 
 	import (
-	"fmt"
-
-	"github.com/hunterhug/marmot/miner"
+		"fmt"
+		"github.com/hunterhug/marmot/miner"
 	)
 
 	func main() {
-		// Use Default Worker, You can Also New One:
-		// worker:=miner.New(nil)
 		miner.SetLogLevel(miner.DEBUG)
-		_, err := miner.SetUrl("https://github.com/hunterhug").Go()
+
+		// Use Default Worker, You can Also New One:
+		//worker, _ := miner.New(nil)
+		//worker = miner.NewWorkerWithNoProxy()
+		//worker = miner.NewAPI()
+		//worker, _ = miner.NewWorkerWithProxy("socks5://127.0.0.1:1080")
+		worker := miner.Clone()
+		_, err := worker.SetUrl("https://www.gov.cn").Go()
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			fmt.Println(miner.ToString())
+			fmt.Println(worker.ToString())
 		}
 	}
 */

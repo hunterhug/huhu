@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/hunterhug/huhu/util"
+	"path/filepath"
 	"strings"
 
-	zhihu "github.com/hunterhug/huhu/src"
+	zhihu "github.com/hunterhug/huhu/core"
 )
 
 // API使用说明
@@ -16,7 +18,7 @@ func main() {
 	zhihu.SetLogLevel("info")
 
 	// 3. 需先传入cookie，必须
-	e := zhihu.SetCookie("./cookie.txt")
+	e := zhihu.SetCookie(filepath.Join(util.CurDir(), "cookie.txt"))
 	if e != nil {
 		panic(e.Error())
 	}
@@ -42,6 +44,7 @@ func main() {
 	answers, e := zhihu.StructAnswer(body)
 	if e != nil {
 		fmt.Println(e.Error())
+		return
 	} else {
 		// 就不打出来了
 		//fmt.Printf("%#v\n", answers.Page)
@@ -64,11 +67,11 @@ func main() {
 	zhihu.SavePicture("test", []byte(html))
 
 	// 9. 抓集合，第2页
-	b, e := zhihu.CatchCoolection(78172986, 2)
+	b, e := zhihu.CatchCollection(78172986, 2)
 	if e != nil {
 		fmt.Println(e.Error())
 	} else {
 		// 解析集合
-		fmt.Printf("%#v", zhihu.ParseCollection(b))
+		fmt.Printf("%#v", zhihu.ParseCollectionNew(b))
 	}
 }

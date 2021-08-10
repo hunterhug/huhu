@@ -1,0 +1,80 @@
+package core
+
+import (
+	"fmt"
+	"path/filepath"
+	"testing"
+
+	"github.com/hunterhug/huhu/util"
+)
+
+func TestCatchAnswer(t *testing.T) {
+	b, e := CatchAnswer(Question("40792901"), 1, 1)
+	if e != nil {
+		fmt.Println(e.Error())
+		data, e1 := JsonBack(b)
+		fmt.Println(string(data), e1)
+	} else {
+		e := util.SaveToFile(filepath.Join(util.CurDir(), "data/question.json"), []byte(b))
+		fmt.Printf("%#v", e)
+	}
+}
+
+func TestStructAnswer(t *testing.T) {
+	body, err := util.ReadFromFile(filepath.Join(util.CurDir(), "data/question.json"))
+	if err != nil {
+		panic(err.Error())
+	}
+	temp, err := StructAnswer(body)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Printf("总数:%#v\n", temp.Page.Totals)
+		fmt.Printf("%#v\n", temp.Page.IsEnd)
+		fmt.Printf("%#v\n", temp.Page.IsStart)
+		fmt.Printf("下一个:%#v\n", temp.Page.NextUrl)
+		fmt.Printf("回答：%#v\n", temp.Data[0].Content)
+	}
+
+}
+
+func TestOutputHtml(t *testing.T) {
+	body, err := util.ReadFromFile(filepath.Join(util.CurDir(), "data/question.json"))
+	if err != nil {
+		panic(err.Error())
+	}
+	temp, err := StructAnswer(body)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		answer := temp.Data[0]
+		qid, title, aid, who, html := OutputHtml(answer)
+		fmt.Println(qid, aid, who, title)
+		util.SaveToFile(filepath.Join(util.CurDir(), "data/question.html"), []byte(html))
+	}
+
+}
+
+func TestCatchOneAnswer(t *testing.T) {
+	e := SetCookie("/home/jinhan/cookie.txt")
+	if e != nil {
+		fmt.Println(e.Error())
+	}
+	//https://www.zhihu.com/question/22030591/answer/22392511
+	//51829486/answer/197012416
+	Qid := "51829486"
+	Aid := "197012416"
+	data, e := CatchOneAnswer(Qid, Aid)
+	if e != nil {
+		fmt.Println(e.Error())
+	} else {
+		fmt.Println(string(data))
+		util.SaveToFile(filepath.Join(util.CurDir(), "data/onequestion.html"), data)
+	}
+}
+
+func TestParseOneAnswer(t *testing.T) {
+	a, _ := util.ReadFromFile(filepath.Join(util.CurDir(), "data/onequestion.html"))
+	r := ParseOneAnswer(a)
+	fmt.Printf("%#v", r)
+}

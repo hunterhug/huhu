@@ -7,37 +7,30 @@ import (
 	"strings"
 	"time"
 
-	zhihu "github.com/hunterhug/huhu/src"
-	"github.com/hunterhug/parrot/util"
+	zhihu "github.com/hunterhug/huhu/core"
+	"github.com/hunterhug/huhu/util"
 )
 
-var Limit = 520 //限制回答个数
+var Limit = 520
 var Follow = false
 var Boss = false
 
 // 抓取一个问题的全部信息
 // 每次只抓取一个答案
-
 func help() {
 	fmt.Println(`
 	-----------------
 	知乎问题信息小助手
 
 	支持:
-	1. 从收藏夹https://www.zhihu.com/collection/78172986批量获取很多问题答案
-	2. 从问题https://www.zhihu.com/question/28853910批量获取一个问题很多答案
-	3. 从某个人https://www.zhihu.com/people/hunterhug批量获取粉丝/偶像(待做, 已实现接口)
-	4. 从某个人https://www.zhihu.com/people/hunterhug批量所有回答(待做, 已实现接口)
+	1. 从收藏夹 https://www.zhihu.com/collection/78172986 批量获取很多问题答案
+	2. 从问题 https://www.zhihu.com/question/28853910 批量获取一个问题很多答案
 
-	请您按提示操作（Enter）！答案保存在data或者people文件夹下！
+	请您按提示操作（Enter）！答案保存在 data 文件夹下，例如打开 28467579-html/1.html ！
 
-	如果什么都没抓到请往exe同级目录cookie.txt,增加cookie，手动增加cookie见说明
+	如果什么都没抓到请往 exe 同级目录 cookie.txt 增加 cookie。
 
-	你亲爱的萌萌~ 努力工作中...
-
-	联系: Github:hunterhug
-	2017.6.29 写于大深圳  Version1.x
-    2021.1.1 修改 Version2.0
+	联系：https://github.com/hunterhug/huhu
 	-----------------
 	`)
 }
@@ -77,14 +70,12 @@ func main() {
 
 	js := strings.ToLower(zhihu.Input(`萌萌：你有几种选项, 你的决定命运着图片链接是否被替换?
 
-	因为知乎防盗链，把生成的HTML放在你的网站上是看不见图片的！
-
 	选项:
-	1. Y: JS解决防盗链, 引入JS方便查看远程图片
-	2. X(默认): HTML替换本地图片, 图片会保存, 可以永久观看
-	3. Z: 打印抓取的问题html
+	1. X(默认): 下载回答的同时图片会下载到电脑里，可以永久观看
+	2. Y: 下载回答，但不下载图片，图片还是在知乎的服务器上
+	3. Z: 将所有问题集合起来，在当前目录下生成一个 index.html
 
-	请选择:`, "x"))
+	请选择(可以直接回车):`, "x"))
 
 	if strings.Contains(js, "y") ||
 		strings.Contains(js, "x") ||
@@ -97,11 +88,11 @@ func main() {
 		return
 	}
 
-	if strings.Contains(js, "y") {
-		zhihu.PublishToWeb = true
-		zhihu.InitJs()
-		util.SaveToFile("data/"+zhihu.JsName, []byte(zhihu.Js))
-	}
+	//if strings.Contains(js, "y") {
+	//zhihu.PublishToWeb = true
+	//zhihu.InitJs()
+	//util.SaveToFile("data/"+zhihu.JsName, []byte(zhihu.Js))
+	//}
 
 	if strings.Contains(js, "x") {
 		Boss = true
@@ -114,7 +105,7 @@ func main() {
 	}
 	choice := zhihu.Input("萌萌：从收藏夹获取回答按1，从问题获取回答按2(默认)", "2")
 	for {
-		ll := zhihu.Input("萌萌说亲爱的，因为回答实在太多，请限制获取的回答个数:30（默认)", "30")
+		ll := zhihu.Input("萌萌说亲爱的，因为每个问题的回答实在太多了，请限制获取的回答个数:30（默认)", "30")
 		temp, errr := util.SI(ll)
 		if errr != nil {
 			fmt.Println("萌萌表示输入的应该是数字哦")
@@ -140,7 +131,6 @@ func main() {
 
 }
 
-// just in hear
 func Base() {
 	for {
 		page := 1
@@ -283,11 +273,10 @@ func Base() {
 	}
 }
 
-// juest in hear
 func Many() {
 	for {
 		//78172986
-		collectids := zhihu.Input("萌萌：请输入集合ID:", "")
+		collectids := zhihu.Input("萌萌：请输入集合ID:(默认78172986):", "78172986")
 		collectid, e := util.SI(collectids)
 		if e != nil {
 			fmt.Println("收藏夹ID错误")
@@ -297,7 +286,7 @@ func Many() {
 		// 收藏夹已抓
 		newcatch := true
 		savecfff := collectids + ".txt" // 收藏夹续抓标志
-		cxx, _ := util.ReadfromFile(savecfff)
+		cxx, _ := util.ReadFromFile(savecfff)
 		cxx1 := strings.Split(string(cxx), "\n")
 
 		qids := map[string]string{}
@@ -331,7 +320,7 @@ func Many() {
 				continue
 			}
 			fmt.Printf("总计有%d个问题:\n", len(qids))
-			s := []string{}
+			var s []string
 			for id, qa := range qids {
 				fmt.Printf("ID:%s，Answer:%s\n", id, qa)
 				temppp := fmt.Sprintf("%s-%s", id, strings.Replace(qa, ",", ".", -1))

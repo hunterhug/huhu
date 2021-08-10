@@ -1,5 +1,5 @@
 /*
-	All right reserved https://github.com/hunterhug/marmot at 2016-2020
+	All right reserved https://github.com/hunterhug/marmot at 2016-2021
 	Attribution-NonCommercial-NoDerivatives 4.0 International
 	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
 	You can use it for education only but can't make profits for any companies and individuals!
@@ -18,54 +18,75 @@ import (
 	"mime/multipart"
 )
 
-// New a worker, if ipstring is a proxy address, New a proxy client.
-// Proxy address such as:
-// 		http://[user]:[password@]ip:port, [] stand it can choose or not. case: socks5://127.0.0.1:1080
-func NewWorker(ipString interface{}) (*Worker, error) {
-	worker := new(Worker)
-	worker.Header = http.Header{}
-	worker.Data = url.Values{}
-	worker.BData = []byte{}
-	if ipString != nil {
-		client, err := NewProxyClient(strings.ToLower(ipString.(string)))
-		worker.Client = client
-		worker.Ipstring = ipString.(string)
-		return worker, err
-	} else {
-		client, err := NewClient()
-		worker.Client = client
-		worker.Ipstring = "localhost"
-		return worker, err
-	}
-
-}
-
-// Alias Name for NewWorker
-func New(ipString interface{}) (*Worker, error) {
-	return NewWorker(ipString)
-}
-
-// New Worker by Your Client
+// NewWorkerByClient New Worker by Your Client
 func NewWorkerByClient(client *http.Client) *Worker {
 	worker := new(Worker)
+	worker.Request = newRequest()
 	worker.Header = http.Header{}
-	worker.Data = url.Values{}
-	worker.BData = []byte{}
+	worker.Response = new(Response)
 
-	// API must can set timeout
-	if DefaultTimeOut != 0 {
-		client.Timeout = util.Second(DefaultTimeOut)
-	}
 	worker.Client = client
 	return worker
 }
 
-// New API Worker, No Cookie Keep.
+// NewAPI New API Worker, No Cookie Keep, share the same http client
 func NewAPI() *Worker {
 	return NewWorkerByClient(NoCookieClient)
 }
 
-// Auto decide which method, Default Get.
+// NewWorker New a worker, if ipString is a proxy address, New a proxy client. evey time gen a new http client!
+// Proxy address such as:
+// 		http://[user]:[password@]ip:port, [] stand it can choose or not. case: socks5://127.0.0.1:1080
+func NewWorker(proxyIpString interface{}) (*Worker, error) {
+	if proxyIpString != nil {
+		client, err := NewProxyClient(strings.ToLower(proxyIpString.(string)))
+		if err != nil {
+			return nil, err
+		}
+
+		worker := NewWorkerByClient(client)
+		worker.Ip = proxyIpString.(string)
+		return worker, err
+	} else {
+		client := NewClient()
+		worker := NewWorkerByClient(client)
+		worker.Ip = "localhost"
+		return worker, nil
+	}
+}
+
+// NewWorkerWithProxy Alias func
+func NewWorkerWithProxy(proxyIpString interface{}) (*Worker, error) {
+	return NewWorker(proxyIpString)
+}
+
+// NewWorkerWithNoProxy Alias func
+func NewWorkerWithNoProxy() *Worker {
+	w, _ := NewWorker(nil)
+	return w
+}
+
+// New Alias Name for NewWorker
+func New(ipString interface{}) (*Worker, error) {
+	return NewWorker(ipString)
+}
+
+// fast new request
+func newRequest() *Request {
+	req := new(Request)
+	req.Data = url.Values{}
+	req.BData = []byte{}
+	return req
+}
+
+// Clone Should Clone a new worker if you want to use repeat
+func (worker *Worker) Clone() *Worker {
+	cloneWorker := NewWorkerByClient(worker.Client)
+	cloneWorker.Ip = worker.Ip
+	return cloneWorker
+}
+
+// Go Auto decide which method, Default Get.
 func (worker *Worker) Go() (body []byte, e error) {
 	switch strings.ToUpper(worker.Method) {
 	case POST:
@@ -97,7 +118,7 @@ func (worker *Worker) GoByMethod(method string) (body []byte, e error) {
 	return worker.SetMethod(method).Go()
 }
 
-// This make effect only your worker exec serial! Attention!
+// ToString This make effect only your worker exec serial! Attention!
 // Change Your Raw data To string
 func (worker *Worker) ToString() string {
 	if worker.Raw == nil {
@@ -106,7 +127,7 @@ func (worker *Worker) ToString() string {
 	return string(worker.Raw)
 }
 
-// This make effect only your worker exec serial! Attention!
+// JsonToString This make effect only your worker exec serial! Attention!
 // Change Your JSON'like Raw data to string
 func (worker *Worker) JsonToString() (string, error) {
 	if worker.Raw == nil {
@@ -125,7 +146,7 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	worker.mux.Lock()
 	defer worker.mux.Unlock()
 
-	// Before FAction we can change or add something before Go()
+	// Before Action we can change or add something before Go()
 	if worker.BeforeAction != nil {
 		worker.BeforeAction(worker.Ctx, worker)
 	}
@@ -141,6 +162,7 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	// New a Request
 	var request *http.Request
 	var err error
+
 	// If binary value is true and BData is not empty
 	// suit for POSTJSON(), POSTFILE()
 	if len(worker.BData) != 0 && binary {
@@ -154,8 +176,6 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	}
 
 	if err != nil {
-		// I count Error time
-		worker.Errortimes++
 		return nil, err
 	}
 
@@ -164,7 +184,6 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	// TCP connections between requests to the same hosts, as if
 	// Transport.DisableKeepAlives were set.
 	// maybe you want long connection
-	// todo
 	//request.Close = true
 
 	// Clone Header, I add some HTTP header!
@@ -174,7 +193,7 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	if contentType != "" {
 		request.Header.Set("Content-Type", contentType)
 	}
-	worker.Request = request
+	worker.Request.Request = request
 
 	// Debug for RequestHeader
 	OutputMaps("Request header", request.Header)
@@ -187,8 +206,6 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	// Do it
 	response, err := worker.Client.Do(request)
 	if err != nil {
-		// I count Error time
-		worker.Errortimes++
 		return nil, err
 	}
 
@@ -206,15 +223,14 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	body, e = ioutil.ReadAll(response.Body)
 	worker.Raw = body
 
-	worker.UrlStatuscode = response.StatusCode
-	worker.Preurl = worker.Url
-	worker.Response = response
-	worker.Fetchtimes++
+	worker.ResponseStatusCode = response.StatusCode
+	worker.Response.Response = response
 
 	// After action
 	if worker.AfterAction != nil {
 		worker.AfterAction(worker.Ctx, worker)
 	}
+
 	return
 }
 
@@ -257,6 +273,7 @@ func (worker *Worker) sentFile(method string) ([]byte, error) {
 	if worker.FileName == "" || worker.FileFormName == "" {
 		return nil, errors.New("fileName or fileFormName must not empty")
 	}
+
 	if len(worker.BData) == 0 {
 		return nil, errors.New("BData must not empty")
 	}
@@ -286,7 +303,6 @@ func (worker *Worker) sentFile(method string) ([]byte, error) {
 	return worker.sent(method, contentType, true)
 }
 
-// Put
 func (worker *Worker) Put() (body []byte, e error) {
 	return worker.sent(PUT, HTTPFORMContentType, false)
 }
@@ -301,11 +317,10 @@ func (worker *Worker) PutXML() (body []byte, e error) {
 
 func (worker *Worker) PutFILE() (body []byte, e error) {
 	return worker.sentFile(PUT)
-
 }
 
 /*
-Other Method
+OtherGo Method
 
      Method         = "OPTIONS"                ; Section 9.2
                     | "GET"                    ; Section 9.3
