@@ -36,7 +36,7 @@ func help() {
 }
 
 var (
-	datadir = flag.String("c", "cookie.txt", "cookie file position")
+	dataDir = flag.String("c", "cookie.txt", "cookie file position")
 	x       = flag.Bool("x", false, "flag mode")
 	mode    = flag.String("m", "2", "catch mode(1:question,2:collect,3)")
 	id      = flag.String("i", "x", "id: must be num")
@@ -49,7 +49,7 @@ func main() {
 		flag.Parse()
 	}
 	help()
-	err := zhihu.SetCookie(*datadir)
+	err := zhihu.SetCookie(*dataDir)
 	if err != nil {
 		fmt.Println("请您一定要保证目录下cookie.txt存在哦：" + err.Error())
 		time.Sleep(50 * time.Second)

@@ -1,15 +1,9 @@
-/*
-	All right reserved https://github.com/hunterhug/marmot at 2016-2021
-	Attribution-NonCommercial-NoDerivatives 4.0 International
-	Notice: The following code's copyright by hunterhug, Please do not spread and modify.
-	You can use it for education only but can't make profits for any companies and individuals!
-*/
 package miner
 
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -36,7 +30,8 @@ func NewAPI() *Worker {
 
 // NewWorker New a worker, if ipString is a proxy address, New a proxy client. evey time gen a new http client!
 // Proxy address such as:
-// 		http://[user]:[password@]ip:port, [] stand it can choose or not. case: socks5://127.0.0.1:1080
+//
+//	http://[user]:[password@]ip:port, [] stand it can choose or not. case: socks5://127.0.0.1:1080
 func NewWorker(proxyIpString interface{}) (*Worker, error) {
 	if proxyIpString != nil {
 		client, err := NewProxyClient(strings.ToLower(proxyIpString.(string)))
@@ -128,7 +123,7 @@ func (worker *Worker) ToString() string {
 }
 
 // JsonToString This make effect only your worker exec serial! Attention!
-// Change Your JSON'like Raw data to string
+// Change Your JSON' like Raw data to string
 func (worker *Worker) JsonToString() (string, error) {
 	if worker.Raw == nil {
 		return "", nil
@@ -146,7 +141,7 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	worker.mux.Lock()
 	defer worker.mux.Unlock()
 
-	// Before Action we can change or add something before Go()
+	// Before Action, we can change or add something before Go()
 	if worker.BeforeAction != nil {
 		worker.BeforeAction(worker.Ctx, worker)
 	}
@@ -157,7 +152,8 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	}
 
 	// For debug
-	Logger.Debugf("[GoWorker] %s %s", method, worker.Url)
+	uuid := "[GoWorker]"
+	Logger.Debugf("%s %s %s", uuid, method, worker.Url)
 
 	// New a Request
 	var request *http.Request
@@ -196,7 +192,7 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	worker.Request.Request = request
 
 	// Debug for RequestHeader
-	OutputMaps("Request header", request.Header)
+	OutputMaps(uuid, "Request Header", request.Header)
 
 	// Tolerate abnormal way to create a Worker
 	if worker.Client == nil {
@@ -216,11 +212,11 @@ func (worker *Worker) sent(method, contentType string, binary bool) (body []byte
 	}
 
 	// Debug
-	OutputMaps("Response header", response.Header)
-	Logger.Debugf("[GoWorker] %v %s", response.Proto, response.Status)
+	OutputMaps(uuid, "Response Header", response.Header)
+	Logger.Debugf("%s %s %s", uuid, response.Proto, response.Status)
 
 	// Read output
-	body, e = ioutil.ReadAll(response.Body)
+	body, e = io.ReadAll(response.Body)
 	worker.Raw = body
 
 	worker.ResponseStatusCode = response.StatusCode
@@ -269,6 +265,12 @@ func (worker *Worker) PostFILE() (body []byte, e error) {
 
 }
 
+var quoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
+
+func escapeQuotes(s string) string {
+	return quoteEscaper.Replace(s)
+}
+
 func (worker *Worker) sentFile(method string) ([]byte, error) {
 	if worker.FileName == "" || worker.FileFormName == "" {
 		return nil, errors.New("fileName or fileFormName must not empty")
@@ -289,6 +291,14 @@ func (worker *Worker) sentFile(method string) ([]byte, error) {
 	_, err = fileWriter.Write(worker.BData)
 	if err != nil {
 		return nil, err
+	}
+
+	for k, v := range worker.Data {
+		for _, vv := range v {
+			if vv != "" {
+				bodyWriter.WriteField(k, vv)
+			}
+		}
 	}
 
 	contentType := bodyWriter.FormDataContentType()
@@ -322,18 +332,17 @@ func (worker *Worker) PutFILE() (body []byte, e error) {
 /*
 OtherGo Method
 
-     Method         = "OPTIONS"                ; Section 9.2
-                    | "GET"                    ; Section 9.3
-                    | "HEAD"                   ; Section 9.4
-                    | "POST"                   ; Section 9.5
-                    | "PUT"                    ; Section 9.6
-                    | "DELETE"                 ; Section 9.7
-                    | "TRACE"                  ; Section 9.8
-                    | "CONNECT"                ; Section 9.9
-                    | extension-method
-   extension-method = token
-     token          = 1*<any CHAR except CTLs or separators>
-
+	  Method         = "OPTIONS"                ; Section 9.2
+	                 | "GET"                    ; Section 9.3
+	                 | "HEAD"                   ; Section 9.4
+	                 | "POST"                   ; Section 9.5
+	                 | "PUT"                    ; Section 9.6
+	                 | "DELETE"                 ; Section 9.7
+	                 | "TRACE"                  ; Section 9.8
+	                 | "CONNECT"                ; Section 9.9
+	                 | extension-method
+	extension-method = token
+	  token          = 1*<any CHAR except CTLs or separators>
 
 Content Type
 

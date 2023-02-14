@@ -3,10 +3,10 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"strings"
 
 	"github.com/hunterhug/marmot/expert"
-	"github.com/hunterhug/marmot/util/goquery"
 )
 
 // CatchCollection 抓取收藏夹第几页列表
@@ -43,7 +43,6 @@ func CatchAllCollection(id int) map[string]string {
 func ParseCollection(body []byte) map[string]string {
 	returns := map[string]string{}
 	doc, _ := expert.QueryBytes(body)
-	//zm-item-title
 	doc.Find(".zm-item-title").Each(func(num int, node *goquery.Selection) {
 		qa := node.Find("a")
 		q, ok := qa.Attr("href")
@@ -70,7 +69,7 @@ type CollectionOneContent struct {
 func ParseCollectionNew(body []byte) map[string]string {
 	m := map[string]string{}
 	collect := new(Collection)
-	json.Unmarshal(body, collect)
+	_ = json.Unmarshal(body, collect)
 	for _, v := range collect.Data {
 		if v.Content.Question.Qid != 0 {
 			m[fmt.Sprintf("%d", v.Content.Question.Qid)] = v.Content.Question.Title

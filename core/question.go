@@ -10,14 +10,14 @@ import (
 )
 
 var (
-	// 问题链接
+	// Qurl 问题链接
 	Qurl = "https://www.zhihu.com/api/v4/questions/%s/answers?"
 
-	// 单答案链接
+	// Q1url 单答案链接
 	Q1url     = "https://www.zhihu.com/question/%s/answer/%s"
 	Qurlquery = "sort_by=default&include=data[*].%s"
 
-	// 各种参数，问题获取到的JSON字段意思
+	// Qurlparm 各种参数，问题获取到的JSON字段意思
 	Qurlparm = []string{
 		"is_normal",           // 是否正常
 		"is_collapsed",        // 是否折叠

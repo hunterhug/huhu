@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/hunterhug/huhu/util"
+	"github.com/hunterhug/marmot/miner"
 	"path/filepath"
 	"strings"
 
@@ -15,7 +16,7 @@ func main() {
 	zhihu.SetWaitTime(1)
 
 	// 2. 调试模式设置为debug，可选
-	zhihu.SetLogLevel("info")
+	zhihu.SetLogLevel(miner.INFO)
 
 	// 3. 需先传入cookie，必须
 	e := zhihu.SetCookie(filepath.Join(util.CurDir(), "cookie.txt"))

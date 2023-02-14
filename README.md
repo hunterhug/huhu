@@ -1,5 +1,7 @@
 # 项目：huhu
 
+太久没用，知乎改规则了～
+
 [![GitHub forks](https://img.shields.io/github/forks/hunterhug/huhu.svg?style=social&label=Forks)](https://github.com/hunterhug/huhu/network)
 [![GitHub stars](https://img.shields.io/github/stars/hunterhug/huhu.svg?style=social&label=Stars)](https://github.com/hunterhug/huhu/stargazers)
 [![GitHub last commit](https://img.shields.io/github/last-commit/hunterhug/huhu.svg)](https://github.com/hunterhug/huhu)

@@ -25,14 +25,14 @@ var (
 	PublishToWeb = false
 
 	// CatchP 抓取图片？
-	CatchP = false
-	Debug  = "info"
+	CatchP   = false
+	LogLevel = miner.INFO
 )
 
 func init() {
 	// 第一步：可选设置全局
-	miner.SetLogLevel(Debug)   // 设置全局爬虫日志，可不设置，设置debug可打印出http请求轨迹
-	miner.SetGlobalTimeout(60) // 爬虫超时时间，可不设置，默认超长时间
+	miner.SetLogLevel(LogLevel) // 设置全局爬虫日志，可不设置，设置debug可打印出http请求轨迹
+	miner.SetGlobalTimeout(60)  // 爬虫超时时间，可不设置，默认超长时间
 
 	// 第二步： 新建一个爬虫对象，nil表示不使用代理IP，可选代理
 	spiders, err := miner.New(nil)
@@ -48,10 +48,9 @@ func init() {
 	PTemp.SetUa(miner.RandomUa())
 }
 
-// SetLogLevel 设置爬虫调试日志级别，开发可用:debug,info
-func SetLogLevel(level string) {
+// SetLogLevel 设置爬虫调试日志级别
+func SetLogLevel(level miner.Level) {
 	miner.SetLogLevel(level)
-
 }
 
 // SetWaitTime 设置爬虫暂停时间

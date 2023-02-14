@@ -2,12 +2,12 @@ package core
 
 import (
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"strings"
 
 	"github.com/hunterhug/huhu/util"
 	"github.com/hunterhug/marmot/expert"
 	"github.com/hunterhug/marmot/miner"
-	"github.com/hunterhug/marmot/util/goquery"
 )
 
 var PSpiderPOOL []string
